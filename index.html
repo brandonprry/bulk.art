@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Bulk Fine Art</title>
+<script src='/sql-wasm.js'></script>
+<link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-
-<script src='/sql-wasm.js'></script>
-  <script type="module">
+<script type="module">
 
 function uniq(a) {
     return a.sort().filter(function(item, pos, ary) {
@@ -15,61 +15,50 @@ function uniq(a) {
     });
 }
 
-const sqlPromise = initSqlJs({
+function uint8ArrayToBase64(uint8Array) {
+  let binaryString = '';
+  // Convert each byte to its character representation
+  for (let i = 0; i < uint8Array.length; i++) {
+    binaryString += String.fromCharCode(uint8Array[i]);
+  }
+  return btoa(binaryString); // Encode binary string to Base64
+}
+
+function base64ToUint8Array(base64) {
+  const binaryString = atob(base64); // Decode Base64 to a binary string
+  const length = binaryString.length;
+  const bytes = new Uint8Array(length);
+  for (let i = 0; i < length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+const SQL = await initSqlJs({
   locateFile: file => `/${file}`
 });
-const dataPromise = fetch("/data.db").then(res => res.arrayBuffer());
-const [SQL, buf] = await Promise.all([sqlPromise, dataPromise])
-const db = new SQL.Database(new Uint8Array(buf));
-  const contents = db.exec("SELECT * FROM pictures");
-console.log(contents);
-</script>
 
+let arr;
+let db;
 
-<script>
-function showRandomLocalStorageObject() {
+if (localStorage.getItem('db') == null) {
+  const buf = await fetch("/data.db").then(res => res.arrayBuffer());
+  arr = new Uint8Array(buf);
+  db = new SQL.Database(arr);
+  localStorage.setItem('db', uint8ArrayToBase64(arr));
+} else {
+  const str = localStorage.getItem('db');
 
-    const keys = Object.keys(localStorage);
-
-    if (keys.length === 0) {
-        alert("No objects in localStorage");
-        return;
-    }
-
-    const randomKey = keys[Math.floor(Math.random() * keys.length)];
-    const obj = JSON.parse(localStorage.getItem(randomKey));
-
-    const modal = document.createElement("div");
-    modal.style.position = "fixed";
-    modal.style.top = "0";
-    modal.style.left = "0";
-    modal.style.width = "100%";
-    modal.style.height = "100%";
-    modal.style.background = "rgba(0,0,0,0.6)";
-    modal.style.display = "flex";
-    modal.style.alignItems = "center";
-    modal.style.justifyContent = "center";
-    modal.style.zIndex = "9999";
-
-    const content = document.createElement("div");
-    content.style.background = "white";
-    content.style.padding = "20px";
-    content.style.borderRadius = "8px";
-    content.style.maxWidth = "600px";
-    content.style.fontFamily = "monospace";
-
-    content.innerHTML = `
-        <h3>${randomKey}</h3>
-        <pre>${obj["name"]}</pre>
-        <button id="closeModal">Close</button>
-    `;
-
-    modal.appendChild(content);
-    document.body.appendChild(modal);
-
-    document.getElementById("closeModal").onclick = () => modal.remove();
+  db = new SQL.Database(base64ToUint8Array(str));
 }
+
+let contents;
+contents = db.exec("SELECT * FROM pictures");
+
+console.log(contents);
+
 </script>
-<button onclick="showRandomLocalStorageObject()">Random Object</button>
+
+
 </body>
 </html>
