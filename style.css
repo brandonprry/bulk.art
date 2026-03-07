@@ -22,16 +22,33 @@ body {
 .footer {
 }
 
+.search {
+  width: 100%;
+  margin:0px;
+  padding: 0px;
+  height: 50px;
+  vertical-align: bottom;
+}
+
 .main {
+
 }
 
 .collections {
+  display: inline-block;
+  width: 49%;
+  height: 50px;
+  text-align: center;
 }
 
 .collection {
 }
 
 .tags {
+  display:inline-block;
+  width:49%;
+  height:50px;
+  text-align: center;
 }
 
 .tag {
