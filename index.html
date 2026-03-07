@@ -9,6 +9,12 @@
 <body>
 <script type="module">
 
+function decompressBlob(blob) {
+  let ds = new DecompressionStream("gzip");
+  let decompressedStream = blob.stream().pipeThrough(ds);
+  return new Response(decompressedStream).blob();
+}
+
 function uniq(a) {
     return a.sort().filter(function(item, pos, ary) {
         return !pos || item != ary[pos - 1];
@@ -38,27 +44,46 @@ const SQL = await initSqlJs({
   locateFile: file => `/${file}`
 });
 
-let arr;
 let db;
 
 if (localStorage.getItem('db') == null) {
-  const buf = await fetch("/data.db").then(res => res.arrayBuffer());
-  arr = new Uint8Array(buf);
+  var buf = await fetch("/data.db").then(res => res.arrayBuffer());
+  var arr = new Uint8Array(buf);
   db = new SQL.Database(arr);
   localStorage.setItem('db', uint8ArrayToBase64(arr));
 } else {
-  const str = localStorage.getItem('db');
-
+  var str = localStorage.getItem('db');
   db = new SQL.Database(base64ToUint8Array(str));
 }
 
-let contents;
-contents = db.exec("SELECT * FROM pictures");
+var collections = db.exec("SELECT DISTINCT collection from pictures");
+var tagsbulk = db.exec("select distinct tags from pictures");
 
-console.log(contents);
+let tags;
+tags=[];
+for (let i = 0; i < tagsbulk.length; i++) {
+  tags = tags.concat(tagsbulk[i].values[0][0].split(","));
+}
+tags=tags.filter(function (item, pos) {return tags.indexOf(item) == pos});
 
+var div = document.getElementById("tags");
+for (let i = 0; i < tags.length; i++) {
+  div.innerText += tags[i];
+}
+ 
 </script>
 
-
+<div id="header" class="header">
+  <div id="menu" class="menu">
+    <div id="collections" class="collections">
+    </div>
+    <div id="tags" class="tags">
+    </div>
+  </div>
+</div>
+<div id="main" class="main">
+</div>
+<div id="footer" class="footer">
+</div>
 </body>
 </html>
