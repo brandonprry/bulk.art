@@ -74,3 +74,36 @@ body {
 .tag {
 
 }
+
+.carousel {
+  width: 600px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-window {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease;
+}
+
+.carousel-item {
+  min-width: 559px;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  background: #eee;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}

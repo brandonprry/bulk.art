@@ -52,6 +52,26 @@ if (localStorage.getItem('db') == null) {
 
 var collectionsbulk = db.exec("SELECT DISTINCT collection from pictures");
 var tagsbulk = db.exec("select distinct tags from pictures");
+var homeBulk = db.exec("SELECT * from homepage");
+
+var featuredCollection = "World War I"; //homeBulk[0].values[0][0];
+//var featuredImages = homeBulk[0].values[0][1].split(",");
+
+var carouselBulk = db.exec("select * from pictures where collection = '"+featuredCollection+"' limit 10");
+
+document.getElementById("featuredTitle").innerText = featuredCollection;
+
+var carousel = document.getElementById("carouselTrack");
+
+for (let i = 0; i < carouselBulk[0].values.length; i++) {
+
+ const item = document.createElement("div");
+  item.className = "carousel-item";
+  item.innerHTML = "<div>"+carouselBulk[0].values[i][2]+"</div>"
+                   +"<img src='"+carouselBulk[0].values[i][1]+"' height=300 />";
+
+  carousel.appendChild(item);
+}
 
 var collections=[];
 for (let i = 0; i < collectionsbulk.length; i++) {
@@ -67,6 +87,7 @@ var tags=[];
 for (let i = 0; i < tagsbulk.length; i++) {
   tags = tags.concat(tagsbulk[i].values[0][0].split(","));
 }
+
 tags=tags.sort().filter(function (item, pos) {return tags.indexOf(item) == pos});
 
 div = document.getElementById("tagMenu");
@@ -79,22 +100,74 @@ for (let i = 0; i < tags.length; i++) {
 <div id="header" class="header">
   <div id="menu" class="menu">
     <div id="search" class="search">
-      <div id="collections" class="collections" onmouseout="document.getElementById('collectionMenu').style.display = 'none'" onmouseover="document.getElementById('collectionMenu').style.display = 'block'">
+      <div id="collections" 
+           class="collections" 
+           onmouseout="document.getElementById('collectionMenu').style.display = 'none'" 
+           onmouseover="document.getElementById('collectionMenu').style.display = 'block'">
       Collections
         <div id="collectionMenu" class="collectionMenu">
         </div>
       </div>
-      <div id="tags" class="tags" onmouseout="document.getElementById('tagMenu').style.display = 'none'" onmouseover="document.getElementById('tagMenu').style.display = 'block'">
+      <div id="tags" 
+           class="tags" 
+           onmouseout="document.getElementById('tagMenu').style.display = 'none'" 
+           onmouseover="document.getElementById('tagMenu').style.display = 'block'">
       Tags
-      <div id="tagMenu" class="tagMenu">
-      </div>
+        <div id="tagMenu" class="tagMenu">
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 <div id="main" class="main">
+  <div id="home" class="home">
+    <div id="featuredCollection" class="featuredCollection">
+<div class="featuredTitle" id="featuredTitle">
 </div>
+<div class="carousel">
+
+  <button class="prev">&#10094;</button>
+
+  <div class="carousel-window">
+    <div class="carousel-track" id="carouselTrack">
+    </div>
+  </div>
+
+  <button class="next">&#10095;</button>
+
+</div>
+    </div>
+    <div id="featuredPictures" class="featuredPictures">
+    </div>
+  </div>
+  <div id="search" class="search">
+  </div>
+</div>
+
 <div id="footer" class="footer">
 </div>
+<script>
+const track = document.getElementById("carouselTrack");
+const items = document.getElementsByClassName("carousel-item"); //document.querySelectorAll(".carousel-item");
+
+let index = 0;
+
+document.querySelector(".next").onclick = () => {
+  index++;
+  if (index >= items.length) index = 0;
+  update();
+};
+
+document.querySelector(".prev").onclick = () => {
+  index--;
+  if (index < 0) index = items.length - 1;
+  update();
+};
+
+function update() {
+  track.style.transform = `translateX(-${index * 100}%)`;
+}
+</script>
 </body>
 </html>
