@@ -37,8 +37,18 @@ body {
 .collections {
   display: inline-block;
   width: 49%;
-  height: 50px;
+  height: 30px;
   text-align: center;
+}
+
+.collectionMenu {
+  display: none;
+  position:absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 290px;
+  z-index: 10;
 }
 
 .collection {
@@ -47,9 +57,20 @@ body {
 .tags {
   display:inline-block;
   width:49%;
-  height:50px;
+  height:30px;
   text-align: center;
 }
 
+.tagMenu {
+  display: none;
+  position:absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 290px;
+  z-index: 10;
+}
+
 .tag {
+
 }
