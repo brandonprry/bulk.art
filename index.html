@@ -54,8 +54,8 @@ var collectionsbulk = db.exec("SELECT DISTINCT collection from pictures");
 var tagsbulk = db.exec("select distinct tags from pictures");
 var homeBulk = db.exec("SELECT * from homepage");
 
-var featuredCollection = "World War I"; //homeBulk[0].values[0][0];
-//var featuredImages = homeBulk[0].values[0][1].split(",");
+var featuredCollection = homeBulk[0].values[0][0];
+var featuredImages = homeBulk[0].values[0][1].split(",");
 
 var carouselBulk = db.exec("select * from pictures where collection = '"+featuredCollection+"' limit 10");
 
@@ -71,6 +71,23 @@ for (let i = 0; i < carouselBulk[0].values.length; i++) {
                    +"<img src='"+carouselBulk[0].values[i][1]+"' height=300 />";
 
   carousel.appendChild(item);
+}
+
+var fImages = document.getElementById("featured_pictures");
+
+for (let i = 0; i < featuredImages.length; i++) {
+  if (i%2==0) {
+    fImages.appendChild(document.createElement('br'));
+    fImages.appendChild(document.createElement('br'));
+   }
+  var picture = db.exec("select * from pictures where fileid='"+featuredImages[i]+"'");
+
+const item = document.createElement("div");
+  item.className = "featured_picture";
+  item.innerHTML = "<div>"+picture[0].values[0][2]+"</div>"
+                   +"<img src='"+picture[0].values[0][1]+"' />";
+
+  fImages.appendChild(item);
 }
 
 var collections=[];
@@ -138,7 +155,8 @@ for (let i = 0; i < tags.length; i++) {
 
 </div>
     </div>
-    <div id="featuredPictures" class="featuredPictures">
+<br />
+    <div id="featured_pictures" class="featured_pictures">
     </div>
   </div>
   <div id="search" class="search">
