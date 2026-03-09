@@ -3,10 +3,11 @@ html {
   width: 100%;
   margin: 0px;
   padding: 0px;
+background-image:url("img1.jpg");  
 }
 
 body {
-  font-family: "Gill Sans", sans-serif;
+font-family: "Gill Sans", sans-serif;
   margin:0px;
   min-height: 1000px;
   width:600px;
@@ -15,8 +16,14 @@ body {
   border-left: 1px solid #000;
   border-right: 1px solid #000;
   padding:0px;
+  backdrop-filter:blur(7px);
 }
-
+.searchBox {
+  text-align: center;
+}
+.searchButton {
+font-size:12px;
+}
 .banner {
   height: 100px;
   width: 100%;
@@ -163,6 +170,13 @@ body {
   transition: transform 0.3s ease;
 }
 
+.collectionPicture {
+  border: 1px solid #eee;
+  width:300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .carousel-item {
   min-width: 559px;
   padding: 0px;
@@ -173,6 +187,10 @@ body {
 }
 
 .carousel-item img {
+  max-height:200px;
+  max-width:300px;
+  height:auto;
+  width:auto;
   box-shadow: 10px 5px 5px #CCC;
   border: 1px solid #000;
 }
@@ -202,6 +220,11 @@ button {
   margin-left: 27px;
   text-align: center;
   vertical-align: top;
+  border:1px solid #fff;
+}
+
+.featured_picture:hover {
+  border:1px solid #b5b5b5;
 }
 
 .featured_picture img {
