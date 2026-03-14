@@ -7,6 +7,59 @@
 <script src='/sql-wasm.js'></script>
 <script>
 
+function openDB() {
+  return new Promise((resolve, reject) => {
+
+    const request = indexedDB.open("artDB", 1);
+
+    request.onupgradeneeded = function (event) {
+      const db = event.target.result;
+      db.createObjectStore("files");
+    };
+
+    request.onsuccess = function (event) {
+      resolve(event.target.result);
+    };
+
+    request.onerror = function (event) {
+      reject(event.target.error);
+    };
+
+  });
+}
+
+
+function getFromIDB(key) {
+  return new Promise(async (resolve, reject) => {
+
+    const db = await openDB();
+    const tx = db.transaction("files", "readonly");
+    const store = tx.objectStore("files");
+
+    const req = store.get(key);
+
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+
+  });
+}
+
+
+function putInIDB(key, value) {
+  return new Promise(async (resolve, reject) => {
+
+    const db = await openDB();
+    const tx = db.transaction("files", "readwrite");
+    const store = tx.objectStore("files");
+
+    const req = store.put(value, key);
+
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+
+  });
+}
+ 
 async function loadSQL() {
 [SQL] = await Promise.all([initSqlJs({
   locateFile: f => "/" + f
@@ -125,23 +178,37 @@ function base64ToUint8Array(base64) {
 async function getDB() {
 
 let db;
-if (localStorage.getItem('db') == null) {
+
+let cached = await getFromIDB("db");
+
+if (!cached) {
+
   const response = await fetch("/data.db");
   const arrayBuffer = await response.arrayBuffer();
   const byteArray = new Uint8Array(arrayBuffer);
+
+  await putInIDB("db", byteArray);
+
   db = new window.SQL.Database(byteArray);
   window.DB = db;
-  localStorage.setItem('db', uint8ArrayToBase64(byteArray));
+
 } else {
+
   if (window.DB == null) {
-    var str = localStorage.getItem('db');
-    db = new window.SQL.Database(base64ToUint8Array(str));
+
+    db = new window.SQL.Database(cached);
     window.DB = db;
+
   } else {
+
     db = window.DB;
+
   }
+
 }
+
 return db;
+
 }
 
 async function loadPage() {
