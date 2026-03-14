@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="preload" href="sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
 <meta charset="UTF-8">
 <title>Bulk Fine Art</title>
 <script src='/sql-wasm.js'></script>
+<script>
+
+async function loadSQL() {
+[SQL] = await Promise.all([initSqlJs({
+  locateFile: f => "/" + f
+})]);
+
+window.SQL = SQL;
+}
+
+</script>
 <link rel="stylesheet" href="style.css"> 
 </head>
-<body>
+<body onload="loadSQL();loadPage();">
 <!-- 
 <ul class="slideshow">
   <li></li>
@@ -16,7 +28,74 @@
   <li></li>
 </ul>
 -->
-<script type="module">
+
+<div id="header" class="header">
+  <div id="banner" class="banner">
+  </div>
+  <div id="links" class="links">
+  </div>
+  <div id="menu" class="menu">
+    <div id="search" class="search">
+      <div id="collections"
+           class="collections"
+           onmouseout="document.getElementById('collectionMenu').style.display = 'none'"
+           onmouseover="document.getElementById('collectionMenu').style.display = 'block'">
+      Collections
+        <div id="collectionMenu" class="collectionMenu">
+        </div>
+      </div>
+      <div id="tags"
+           class="tags"
+           onmouseout="document.getElementById('tagMenu').style.display = 'none'"
+           onmouseover="document.getElementById('tagMenu').style.display = 'block'">
+      Tags
+        <div id="tagMenu" class="tagMenu">
+        </div>
+      </div>
+<br />
+<div id="searchBox" class="searchBox">
+<br />
+        <input width=50 /><button onclick="search()" type="button" class=searchButton>Search</button>
+        </div>
+    </div>
+  </div>
+</div>
+<div id="main" class="main">
+<br/>
+<div id="searchResults" class="searchResults">
+        </div>
+<div id="pictureDetails" class="pictureDetails">
+        </div>
+<br/><br />
+  <div id="home" class="home">
+    <div id="featuredCollection" class="featuredCollection">
+<div class="featuredTitle" id="featuredTitle">
+</div>
+<div class="carousel">
+
+  <button class="prev">&#10094;</button>
+
+  <div class="carousel-window">
+    <div class="carousel-track" id="carouselTrack">
+    </div>
+  </div>
+
+  <button class="next">&#10095;</button>
+
+</div>
+    </div>
+<br />
+    <div id="featured_pictures" class="featured_pictures">
+    </div>
+  </div>
+  <div id="search" class="search">
+  </div>
+</div>
+
+<div id="footer" class="footer">
+</div>
+
+<script>
 
 function decompressBlob(blob) {
   let ds = new DecompressionStream("gzip");
@@ -43,21 +122,37 @@ function base64ToUint8Array(base64) {
   return bytes;
 }
 
-const SQL = await initSqlJs({
-  locateFile: file => `/${file}`
-});
+async function getDB() {
 
 let db;
-
 if (localStorage.getItem('db') == null) {
-  var buf = await fetch("/data.db").then(res => res.arrayBuffer());
-  var arr = new Uint8Array(buf);
-  db = new SQL.Database(arr);
-  localStorage.setItem('db', uint8ArrayToBase64(arr));
+  const response = await fetch("/data.db");
+  const arrayBuffer = await response.arrayBuffer();
+  const byteArray = new Uint8Array(arrayBuffer);
+  db = new window.SQL.Database(byteArray);
+  window.DB = db;
+  localStorage.setItem('db', uint8ArrayToBase64(byteArray));
 } else {
-  var str = localStorage.getItem('db');
-  db = new SQL.Database(base64ToUint8Array(str));
+  if (window.DB == null) {
+    var str = localStorage.getItem('db');
+    db = new window.SQL.Database(base64ToUint8Array(str));
+    window.DB = db;
+  } else {
+    db = window.DB;
+  }
 }
+return db;
+}
+
+async function loadPage() {
+
+[SQL] = await Promise.all([initSqlJs({
+  locateFile: f => "/" + f
+})]);
+
+window.SQL = SQL;
+
+var db = await getDB();
 
 var collectionsbulk = db.exec("SELECT DISTINCT collection from pictures");
 var tagsbulk = db.exec("select distinct tags from pictures");
@@ -127,67 +222,9 @@ div = document.getElementById("tagMenu");
 for (let i = 0; i < tags.length; i++) {
   div.innerHTML += "<div class='tag'>"+tags[i]+"</div>";
 }
- 
+} 
 </script>
 
-<div id="header" class="header">
-  <div id="banner" class="banner">
-  </div>
-  <div id="links" class="links">
-  </div>
-  <div id="menu" class="menu">
-    <div id="search" class="search">
-      <div id="collections" 
-           class="collections" 
-           onmouseout="document.getElementById('collectionMenu').style.display = 'none'" 
-           onmouseover="document.getElementById('collectionMenu').style.display = 'block'">
-      Collections
-        <div id="collectionMenu" class="collectionMenu">
-        </div>
-      </div>
-      <div id="tags" 
-           class="tags" 
-           onmouseout="document.getElementById('tagMenu').style.display = 'none'" 
-           onmouseover="document.getElementById('tagMenu').style.display = 'block'">
-      Tags
-        <div id="tagMenu" class="tagMenu">
-        </div>
-      </div>
-<div id="searchBox" class="searchBox">
-        <input width=50 /><button type="button" class=searchButton>Search</button>
-        </div>
-    </div>
-  </div>
-</div>
-<div id="main" class="main">
-  <br/>
-  <div id="home" class="home">
-    <div id="featuredCollection" class="featuredCollection">
-<div class="featuredTitle" id="featuredTitle">
-</div>
-<div class="carousel">
-
-  <button class="prev">&#10094;</button>
-
-  <div class="carousel-window">
-    <div class="carousel-track" id="carouselTrack">
-    </div>
-  </div>
-
-  <button class="next">&#10095;</button>
-
-</div>
-    </div>
-<br />
-    <div id="featured_pictures" class="featured_pictures">
-    </div>
-  </div>
-  <div id="search" class="search">
-  </div>
-</div>
-
-<div id="footer" class="footer">
-</div>
 <script>
 const track = document.getElementById("carouselTrack");
 const items = document.getElementsByClassName("carousel-item"); //document.querySelectorAll(".carousel-item");
@@ -208,6 +245,13 @@ document.querySelector(".prev").onclick = () => {
 
 function update() {
   track.style.transform = `translateX(-${index * 100}%)`;
+}
+
+function search()
+{ 
+  var db = getDB();
+  var test = db.exec("SELECT DISTINCT collection from pictures");
+  document.getElementById("searchResults").style.display = 'block';
 }
 </script>
 </body>

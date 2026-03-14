@@ -22,8 +22,9 @@ font-family: "Gill Sans", sans-serif;
   text-align: center;
 }
 .searchButton {
-font-size:12px;
+  font-size:12px;
 }
+
 .banner {
   height: 100px;
   width: 100%;
@@ -234,5 +235,38 @@ button {
     width:auto;
     border: 1px solid #000;
     box-shadow: 10px 5px 5px #ccc;
+}
+
+.searchResults {
+  display: none;
+  position:absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius:3px
+  padding: 5px;
+  width: 290px;
+  min-height: 200px;
+  max-height: 800px;
+  z-index: 10;
+  margin-top: 5px;
+  margin-left: 155px;
+  overflow: auto;
+  backdrop-filter: blur(5px);
+}
+
+.searchResult {
+
+}
+
+.pictureDetails {
+  display: none;
+  position:absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 500px;
+  height: 700px;
+  z-index: 10;
+  backdrop-filter: blur(5px);
 }
 
