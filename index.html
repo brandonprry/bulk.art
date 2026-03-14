@@ -8,61 +8,61 @@
 <script>
 
 function openDB() {
-  return new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 
-    const request = indexedDB.open("artDB", 1);
+			const request = indexedDB.open("artDB", 1);
 
-    request.onupgradeneeded = function (event) {
-      const db = event.target.result;
-      db.createObjectStore("files");
-    };
+			request.onupgradeneeded = function (event) {
+			const db = event.target.result;
+			db.createObjectStore("files");
+			};
 
-    request.onsuccess = function (event) {
-      resolve(event.target.result);
-    };
+			request.onsuccess = function (event) {
+			resolve(event.target.result);
+			};
 
-    request.onerror = function (event) {
-      reject(event.target.error);
-    };
+			request.onerror = function (event) {
+			reject(event.target.error);
+			};
 
-  });
+			});
 }
 
 
 function getFromIDB(key) {
-  return new Promise(async (resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 
-    const db = await openDB();
-    const tx = db.transaction("files", "readonly");
-    const store = tx.objectStore("files");
+			const db = await openDB();
+			const tx = db.transaction("files", "readonly");
+			const store = tx.objectStore("files");
 
-    const req = store.get(key);
+			const req = store.get(key);
 
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
+			req.onsuccess = () => resolve(req.result);
+			req.onerror = () => reject(req.error);
 
-  });
+			});
 }
 
 
 function putInIDB(key, value) {
-  return new Promise(async (resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 
-    const db = await openDB();
-    const tx = db.transaction("files", "readwrite");
-    const store = tx.objectStore("files");
+			const db = await openDB();
+			const tx = db.transaction("files", "readwrite");
+			const store = tx.objectStore("files");
 
-    const req = store.put(value, key);
+			const req = store.put(value, key);
 
-    req.onsuccess = () => resolve();
-    req.onerror = () => reject(req.error);
+			req.onsuccess = () => resolve();
+			req.onerror = () => reject(req.error);
 
-  });
+			});
 }
- 
+
 async function loadSQL() {
-[SQL] = await Promise.all([initSqlJs({
-  locateFile: f => "/" + f
+	[SQL] = await Promise.all([initSqlJs({
+locateFile: f => "/" + f
 })]);
 
 window.SQL = SQL;
@@ -72,77 +72,68 @@ window.SQL = SQL;
 <link rel="stylesheet" href="style.css"> 
 </head>
 <body onload="loadSQL();loadPage();">
-<!-- 
-<ul class="slideshow">
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-</ul>
--->
 
 <div id="header" class="header">
-  <div id="banner" class="banner">
-  </div>
-  <div id="links" class="links">
-  </div>
-  <div id="menu" class="menu">
-    <div id="search" class="search">
-      <div id="collections"
-           class="collections"
-           onmouseout="document.getElementById('collectionMenu').style.display = 'none'"
-           onmouseover="document.getElementById('collectionMenu').style.display = 'block'">
-      Collections
-        <div id="collectionMenu" class="collectionMenu">
-        </div>
-      </div>
-      <div id="tags"
-           class="tags"
-           onmouseout="document.getElementById('tagMenu').style.display = 'none'"
-           onmouseover="document.getElementById('tagMenu').style.display = 'block'">
-      Tags
-        <div id="tagMenu" class="tagMenu">
-        </div>
-      </div>
+<div id="banner" class="banner">
+</div>
+<div id="links" class="links">
+</div>
+<div id="menu" class="menu">
+<div id="search" class="search">
+<div id="collections"
+class="collections"
+onmouseout="document.getElementById('collectionMenu').style.display = 'none'"
+onmouseover="document.getElementById('collectionMenu').style.display = 'block'">
+Collections
+<div id="collectionMenu" class="collectionMenu">
+</div>
+</div>
+<div id="tags"
+class="tags"
+onmouseout="document.getElementById('tagMenu').style.display = 'none'"
+onmouseover="document.getElementById('tagMenu').style.display = 'block'">
+Tags
+<div id="tagMenu" class="tagMenu">
+</div>
+</div>
 <br />
 <div id="searchBox" class="searchBox">
 <br />
-        <input width=50 /><button onclick="search()" type="button" class=searchButton>Search</button>
-        </div>
-    </div>
-  </div>
+<input width=50 /><button onclick="search()" type="button" class=searchButton>Search</button>
+</div>
+</div>
+</div>
 </div>
 <div id="main" class="main">
 <br/>
 <div id="searchResults" class="searchResults">
-        </div>
+</div>
 <div id="pictureDetails" class="pictureDetails">
-        </div>
+</div>
 <br/><br />
-  <div id="home" class="home">
-    <div id="featuredCollection" class="featuredCollection">
+<div id="home" class="home">
+<div id="featuredCollection" class="featuredCollection">
 <div class="featuredTitle" id="featuredTitle">
 </div>
 <div class="carousel">
 
-  <button class="prev">&#10094;</button>
+<button class="prev">&#10094;</button>
 
-  <div class="carousel-window">
-    <div class="carousel-track" id="carouselTrack">
-    </div>
-  </div>
+<div class="carousel-window">
+<div class="carousel-track" id="carouselTrack">
+</div>
+</div>
 
-  <button class="next">&#10095;</button>
+<button class="next">&#10095;</button>
 
 </div>
-    </div>
+</div>
 <br />
-    <div id="featured_pictures" class="featured_pictures">
-    </div>
-  </div>
-  <div id="search" class="search">
-  </div>
+<div id="featured_pictures" class="featured_pictures">
+</div>
+</div>
+<div id="search" class="search">
+</div>
 </div>
 
 <div id="footer" class="footer">
@@ -151,70 +142,70 @@ window.SQL = SQL;
 <script>
 
 function decompressBlob(blob) {
-  let ds = new DecompressionStream("gzip");
-  let decompressedStream = blob.stream().pipeThrough(ds);
-  return new Response(decompressedStream).blob();
+	let ds = new DecompressionStream("gzip");
+	let decompressedStream = blob.stream().pipeThrough(ds);
+	return new Response(decompressedStream).blob();
 }
 
 function uint8ArrayToBase64(uint8Array) {
-  let binaryString = '';
-  // Convert each byte to its character representation
-  for (let i = 0; i < uint8Array.length; i++) {
-    binaryString += String.fromCharCode(uint8Array[i]);
-  }
-  return btoa(binaryString); // Encode binary string to Base64
+	let binaryString = '';
+	// Convert each byte to its character representation
+	for (let i = 0; i < uint8Array.length; i++) {
+		binaryString += String.fromCharCode(uint8Array[i]);
+	}
+	return btoa(binaryString); // Encode binary string to Base64
 }
 
 function base64ToUint8Array(base64) {
-  const binaryString = atob(base64); // Decode Base64 to a binary string
-  const length = binaryString.length;
-  const bytes = new Uint8Array(length);
-  for (let i = 0; i < length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes;
+	const binaryString = atob(base64); // Decode Base64 to a binary string
+	const length = binaryString.length;
+	const bytes = new Uint8Array(length);
+	for (let i = 0; i < length; i++) {
+		bytes[i] = binaryString.charCodeAt(i);
+	}
+	return bytes;
 }
 
 async function getDB() {
 
-let db;
+	let db;
 
-let cached = await getFromIDB("db");
+	let cached = await getFromIDB("db");
 
-if (!cached) {
+	if (!cached) {
 
-  const response = await fetch("/data.db");
-  const arrayBuffer = await response.arrayBuffer();
-  const byteArray = new Uint8Array(arrayBuffer);
+		const response = await fetch("/data.db");
+		const arrayBuffer = await response.arrayBuffer();
+		const byteArray = new Uint8Array(arrayBuffer);
 
-  await putInIDB("db", byteArray);
+		await putInIDB("db", byteArray);
 
-  db = new window.SQL.Database(byteArray);
-  window.DB = db;
+		db = new window.SQL.Database(byteArray);
+		window.DB = db;
 
-} else {
+	} else {
 
-  if (window.DB == null) {
+		if (window.DB == null) {
 
-    db = new window.SQL.Database(cached);
-    window.DB = db;
+			db = new window.SQL.Database(cached);
+			window.DB = db;
 
-  } else {
+		} else {
 
-    db = window.DB;
+			db = window.DB;
 
-  }
+		}
 
-}
+	}
 
-return db;
+	return db;
 
 }
 
 async function loadPage() {
 
-[SQL] = await Promise.all([initSqlJs({
-  locateFile: f => "/" + f
+	[SQL] = await Promise.all([initSqlJs({
+locateFile: f => "/" + f
 })]);
 
 window.SQL = SQL;
@@ -236,58 +227,58 @@ var carousel = document.getElementById("carouselTrack");
 
 for (let i = 0; i < carouselBulk[0].values.length; i++) {
 
-var author = carouselBulk[0].values[i][2].split(/ - (.*)/)[0];
-var title = carouselBulk[0].values[i][2].split(/ - (.*)/)[1];
+	var author = carouselBulk[0].values[i][2].split(/ - (.*)/)[0];
+	var title = carouselBulk[0].values[i][2].split(/ - (.*)/)[1];
 
- const item = document.createElement("div");
-  item.className = "carousel-item";
-  item.innerHTML = "<br/><div class='collectionPicture'><div>"+author+"</div>"
-                   +"<img src='"+carouselBulk[0].values[i][1]+"' height=300 />"
-                   +"<div>"+title+"</div></div><br/>";
+	const item = document.createElement("div");
+	item.className = "carousel-item";
+	item.innerHTML = "<br/><div class='collectionPicture'><div>"+author+"</div>"
+		+"<img src='"+carouselBulk[0].values[i][1]+"' height=300 />"
+		+"<div>"+title+"</div></div><br/>";
 
-  carousel.appendChild(item);
+	carousel.appendChild(item);
 }
 
 var fImages = document.getElementById("featured_pictures");
 
 for (let i = 0; i < featuredImages.length; i++) {
-  if (i%2==0) {
-    fImages.appendChild(document.createElement('br'));
-    fImages.appendChild(document.createElement('br'));
-   }
-  var picture = db.exec("select * from pictures where fileid='"+featuredImages[i]+"'");
+	if (i%2==0) {
+		fImages.appendChild(document.createElement('br'));
+		fImages.appendChild(document.createElement('br'));
+	}
+	var picture = db.exec("select * from pictures where fileid='"+featuredImages[i]+"'");
 
-var author = picture[0].values[0][2].split(/ - (.*)/)[0];
-var title = picture[0].values[0][2].split(/ - (.*)/)[1];
-const item = document.createElement("div");
-  item.className = "featured_picture";
-  item.innerHTML = "<div>"+author+"</div>"
-                   +"<img src='"+picture[0].values[0][1]+"' />"
-                   +"<div>"+title+"</div>";
+	var author = picture[0].values[0][2].split(/ - (.*)/)[0];
+	var title = picture[0].values[0][2].split(/ - (.*)/)[1];
+	const item = document.createElement("div");
+	item.className = "featured_picture";
+	item.innerHTML = "<div>"+author+"</div>"
+		+"<img src='"+picture[0].values[0][1]+"' />"
+		+"<div>"+title+"</div>";
 
-  fImages.appendChild(item);
+	fImages.appendChild(item);
 }
 
 var collections=[];
 for (let i = 0; i < collectionsbulk.length; i++) {
-  collections.push(collectionsbulk[i].values[0][0]);
+	collections.push(collectionsbulk[i].values[0][0]);
 }
 
 var div = document.getElementById("collectionMenu");
 for (let i = 0; i < collections.length; i++) {
-  div.innerHTML += "<div class='collection'>"+collections[i]+"</div>";  
+	div.innerHTML += "<div class='collection'>"+collections[i]+"</div>";  
 }
 
 var tags=[];
 for (let i = 0; i < tagsbulk.length; i++) {
-  tags = tags.concat(tagsbulk[i].values[0][0].split(","));
+	tags = tags.concat(tagsbulk[i].values[0][0].split(","));
 }
 
 tags=tags.sort().filter(function (item, pos) {return tags.indexOf(item) == pos});
 
 div = document.getElementById("tagMenu");
 for (let i = 0; i < tags.length; i++) {
-  div.innerHTML += "<div class='tag'>"+tags[i]+"</div>";
+	div.innerHTML += "<div class='tag'>"+tags[i]+"</div>";
 }
 } 
 </script>
@@ -299,26 +290,26 @@ const items = document.getElementsByClassName("carousel-item"); //document.query
 let index = 0;
 
 document.querySelector(".next").onclick = () => {
-  index++;
-  if (index >= items.length) index = 0;
-  update();
+	index++;
+	if (index >= items.length) index = 0;
+	update();
 };
 
 document.querySelector(".prev").onclick = () => {
-  index--;
-  if (index < 0) index = items.length - 1;
-  update();
+	index--;
+	if (index < 0) index = items.length - 1;
+	update();
 };
 
 function update() {
-  track.style.transform = `translateX(-${index * 100}%)`;
+	track.style.transform = `translateX(-${index * 100}%)`;
 }
 
 async function search()
 { 
-  var db = await getDB();
-  var test = db.exec("SELECT DISTINCT collection from pictures");
-  document.getElementById("searchResults").style.display = 'block';
+	var db = await getDB();
+	var test = db.exec("SELECT DISTINCT collection from pictures");
+	document.getElementById("searchResults").style.display = 'block';
 }
 </script>
 </body>
