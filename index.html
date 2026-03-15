@@ -66,11 +66,23 @@ function clearModal() {
 }
 
 function loadContact() {
+  document.getElementById("contactOverlay").style.display = 'flex';
+ window.location.hash = "#contact";
+}
 
+function clearContact() {
+  document.getElementById("contactOverlay").style.display = 'none';
+ window.location.hash = "";
 }
 
 function loadSitemap() {
+  document.getElementById("sitemapOverlay").style.display = 'flex';
+ window.location.hash = "#sitemap";
+}
 
+function clearSitemap() {
+  document.getElementById("sitemapOverlay").style.display = 'none';
+ window.location.hash = "";
 }
 
 async function loadSQL() {
@@ -83,8 +95,8 @@ window.SQL = SQL;
 
 function redirectToBuy() {
   var select = document.getElementById("modalSizes");
-var url = select.options[select.selectedIndex].value;
-window.open(url, '_blank');
+  var url = select.options[select.selectedIndex].value;
+  window.open(url, '_blank');
 }
 
 </script>
@@ -204,10 +216,10 @@ Tags
 
 <div id="footer" class="footer">
   <div class="footerLink">
-    <a href="#contact">Contact</a>
+    <a href="#contact" onclick="loadContact()">Contact</a>
   </div>
   <div class="footerLink">
-    <a href="#sitemap">Site Map</a>
+    <a href="#sitemap" onclick="loadSitemap()">Site Map</a>
   </div>
 </div>
 

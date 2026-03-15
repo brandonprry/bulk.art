@@ -228,6 +228,14 @@ border: none;
 }
 
 .collection {
+  cursor: pointer;
+  background-color: white;
+  text-decoration: none;
+}
+
+.collection:hover {
+  background-color:#e5e5e5;
+  text-decoration: underline;
 }
 
 .tags {
@@ -249,7 +257,14 @@ border: none;
 }
 
 .tag {
+  cursor: pointer;
+  background-color: white;
+  text-decoration: none;
+}
 
+.tag:hover {
+  background-color:#e5e5e5;
+  text-decoration: underline;
 }
 
 .carousel {
