@@ -65,6 +65,14 @@ function clearModal() {
   window.location.hash = "";
 }
 
+function loadContact() {
+
+}
+
+function loadSitemap() {
+
+}
+
 async function loadSQL() {
 	[SQL] = await Promise.all([initSqlJs({
 locateFile: f => "/" + f
@@ -102,6 +110,28 @@ window.open(url, '_blank');
       <select id="modalSizes"></select>
       <button type=button onclick="redirectToBuy()">Buy Now!</button>
       <br/><br/>
+    </center>
+  </div>
+</div>
+
+<div id="contactOverlay">
+  <div id="contactBox">
+    <div>
+      <button onclick="clearContact()">&#10006;</button>
+    </div>
+    <center>
+      <br/>
+    </center>
+  </div>
+</div>
+
+<div id="sitemapOverlay">
+  <div id="sitemapBox">
+    <div>
+      <button onclick="clearSitemap()">&#10006;</button>
+    </div>
+    <center>
+      <br/>
     </center>
   </div>
 </div>
@@ -173,6 +203,12 @@ Tags
 </div>
 
 <div id="footer" class="footer">
+  <div class="footerLink">
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footerLink">
+    <a href="#sitemap">Site Map</a>
+  </div>
 </div>
 
 </div>
@@ -245,11 +281,13 @@ async function getDB() {
 
 function searchTag(element) {
 	document.getElementById("searchText").value = element.innerText;
+        element.parentElement.style.display = 'none';
         search();
 }
 
 function searchCollection(element) {
 	document.getElementById("searchText").value = element.innerText;
+        element.parentElement.style.display = 'none';
 	search();
 }
 
@@ -447,6 +485,10 @@ window.addEventListener("load", async () => {
           document.getElementById("modalCollection").innerText = modal[0].values[0][4];
           document.getElementById("modalOverlay").style.display = 'flex';
 	  window.location.hash = fileid;
+  } else if (hash.startsWith("#collection_")) {
+  } else if (hash.startsWith("#tag_")) {
+  } else if (hash.startsWith("#contact")) {
+  } else if (hash.startsWith("#sitemap")) {
   }
 });
 

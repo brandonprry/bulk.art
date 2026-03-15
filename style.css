@@ -157,6 +157,66 @@ border: none;
   box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
 
+#contactOverlay {
+  position: fixed;
+  inset: 0;                 /* top:0 left:0 right:0 bottom:0 */
+
+  background: rgba(0,0,0,0.6);
+
+  display: none;            /* hidden by default */
+
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  transition: opacity 1s;
+  z-index: 10000;
+}
+
+#contactBox {
+  min-width: 400px;
+  min-height: 400px;
+
+  padding: 10px;
+
+  background: white;
+
+  overflow: auto;           /* scroll inside modal if needed */
+
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+#sitemapOverlay {
+  position: fixed;
+  inset: 0;                 /* top:0 left:0 right:0 bottom:0 */
+
+  background: rgba(0,0,0,0.6);
+
+  display: none;            /* hidden by default */
+
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  transition: opacity 1s;
+  z-index: 10000;
+}
+
+#sitemapBox {
+  min-width: 400px;
+  min-height: 400px;
+
+  padding: 10px;
+
+  background: white;
+
+  overflow: auto;           /* scroll inside modal if needed */
+
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.footerLink {
+  display: inline-block;
+}
+
 .collectionMenu {
   display: none;
   position:absolute;
