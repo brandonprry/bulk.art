@@ -477,6 +477,28 @@
         var r = document.createElement("div");
         r.className = "result";
         r.innerHTML = "<div class='resultImage'><img src='"+test[0].values[i][1]+"' height=50px /></div><div class='resultName'>"+test[0].values[i][2]+"</div>";
+        r.addEventListener("click", () => {
+           const fileid = test[0].values[i][0];
+        var modal = db.exec("SELECT * from pictures where fileid='" + fileid + "'");
+        var sizes = db.exec("select * from sizes where fileid = '" + fileid + "'");
+
+        const select = document.getElementById("modalSizes");
+        select.innerHTML = "";
+
+        for (let k = 0; k < sizes[0].values.length; k++) {
+          const option = document.createElement("option");
+          option.textContent = sizes[0].values[k][2];
+          option.value = sizes[0].values[k][3];
+          select.appendChild(option);
+        }
+
+        document.getElementById("modalTitle").innerText = modal[0].values[0][2];
+        document.getElementById("modalImage").innerHTML = "<img src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
+        document.getElementById("modalTags").innerText = modal[0].values[0][3];
+        document.getElementById("modalCollection").innerText = modal[0].values[0][4];
+        document.getElementById("modalOverlay").style.display = 'flex';
+        window.location.hash = fileid;
+        });
         element.appendChild(r);
       }
 
