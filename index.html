@@ -93,7 +93,9 @@ window.open(url, '_blank');
       <div id="modalTitle"  class="modalTitle"> </div>
       <br/>
       <div id="modalImage" class="modalImage" > </div>
+      <br/>
       <div id="modalTags" class="modalTags"></div>
+      <br />
       <div id="modalCollection" class="modalCollection"></div>
       <br/>
       <select id="modalSizes"></select>
@@ -131,7 +133,7 @@ Tags
 <br />
 <div id="searchBox" class="searchBox">
 <br />
-<input width=50 /><button onclick="search()" type="button" class=searchButton>Search</button>
+<input width=50 id="searchText" /><button onclick="search()" type="button" class=searchButton>Search</button>
 </div>
 </div>
 </div>
@@ -240,6 +242,16 @@ async function getDB() {
 
 }
 
+function searchTag(element) {
+	document.getElementById("searchText").value = element.innerText;
+        search();
+}
+
+function searchCollection(element) {
+	document.getElementById("searchText").value = element.innerText;
+	search();
+}
+
 async function loadPage() {
 
 	[SQL] = await Promise.all([initSqlJs({
@@ -287,6 +299,8 @@ for (let i = 0; i < carouselBulk[0].values.length; i++) {
  
           document.getElementById("modalTitle").innerText = modal[0].values[0][2];
           document.getElementById("modalImage").innerHTML = "<img src='"+modal[0].values[0][1]+"' style='min-width:400px; min-height:400px;' />";
+          document.getElementById("modalTags").innerText = modal[0].values[0][3];
+          document.getElementById("modalCollection").innerText = modal[0].values[0][4];
           document.getElementById("modalOverlay").style.display = 'flex';
         });
 	item.innerHTML = "<br/><div class='collectionPicture'><div>"+author+"</div>"
@@ -328,7 +342,8 @@ for (let i = 0; i < featuredImages.length; i++) {
 
           document.getElementById("modalTitle").innerText = modal[0].values[0][2];
           document.getElementById("modalImage").innerHTML = "<img src='"+modal[0].values[0][1]+"' style='min-width:400px; min-height:400px;' />";
-
+          document.getElementById("modalTags").innerText = modal[0].values[0][3];
+          document.getElementById("modalCollection").innerText = modal[0].values[0][4];
           document.getElementById("modalOverlay").style.display = 'flex';
         });
 
@@ -347,7 +362,7 @@ for (let i = 0; i < collectionsbulk.length; i++) {
 
 var div = document.getElementById("collectionMenu");
 for (let i = 0; i < collections.length; i++) {
-	div.innerHTML += "<div class='collection'>"+collections[i]+"</div>";  
+	div.innerHTML += "<div class='collection' onclick='searchCollection(this)'>"+collections[i]+"</div>";  
 }
 
 var tags=[];
@@ -359,7 +374,7 @@ tags=tags.sort().filter(function (item, pos) {return tags.indexOf(item) == pos})
 
 div = document.getElementById("tagMenu");
 for (let i = 0; i < tags.length; i++) {
-	div.innerHTML += "<div class='tag'>"+tags[i]+"</div>";
+	div.innerHTML += "<div class='tag' onclick='searchTag(this)'>"+tags[i]+"</div>";
 }
 } 
 </script>
