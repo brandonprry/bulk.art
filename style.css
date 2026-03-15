@@ -140,8 +140,10 @@ border: none;
 }
 
 #modalBox {
-  width: 700px;
-  height: 700px;
+  min-width: 400px;
+  min-height: 400px;
+
+  padding: 10px;
 
   background: white;
 
