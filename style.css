@@ -130,6 +130,9 @@ border: none;
   100% {opacity:0;}
 }
 
+.banner {
+  background-image: url(banner.png);
+}
 .header {
   background-color:#fff;
 }
