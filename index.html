@@ -66,22 +66,38 @@ function clearModal() {
 }
 
 function loadContact() {
-  document.getElementById("contactOverlay").style.display = 'flex';
+ document.getElementById("contactOverlay").style.display = 'flex';
  window.location.hash = "#contact";
 }
 
 function clearContact() {
-  document.getElementById("contactOverlay").style.display = 'none';
+ document.getElementById("contactOverlay").style.display = 'none';
  window.location.hash = "";
 }
 
-function loadSitemap() {
-  document.getElementById("sitemapOverlay").style.display = 'flex';
+async function loadSitemap() {
+ var db = await getDB();
+ var pics = db.exec("select * from pictures");
+
+ //document.getElementById("sitemapBox").innerHTML = "";
+
+ if (!window.SITEMAP) {
+  for (let i = 0; i < pics[0].values.length; i++) {
+     const item = document.createElement("div");
+     item.className = "sitemapRow";
+
+     item.innerHTML = "<a target='_blank' href='/#"+pics[0].values[i][0]+"'>"+pics[0].values[i][2]+"</a>";
+     document.getElementById("sitemapBox").appendChild(item);   
+  } 
+
+  window.SITEMAP = true;
+ }
+ document.getElementById("sitemapOverlay").style.display = 'flex';
  window.location.hash = "#sitemap";
 }
 
 function clearSitemap() {
-  document.getElementById("sitemapOverlay").style.display = 'none';
+ document.getElementById("sitemapOverlay").style.display = 'none';
  window.location.hash = "";
 }
 
@@ -96,7 +112,6 @@ window.SQL = SQL;
 function redirectToBuy() {
   var select = document.getElementById("modalSizes");
   var url = select.options[select.selectedIndex].value;
-  window.open(url, '_blank');
 }
 
 </script>
@@ -450,11 +465,6 @@ document.querySelector(".prev").onclick = () => {
 	update();
 };
 
-async function modalPicture(fileid) {
-    var db = await getDB();
-    var picture = db.exec("SELECT * from pictures where fileid='"+fileid+"'");
-    
-}
 
 function update() {
 	track.style.transform = `translateX(-${index * 100}%)`;
