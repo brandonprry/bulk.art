@@ -73,6 +73,14 @@ window.SQL = SQL;
 </head>
 <body onload="loadSQL();loadPage();">
 
+<div id="modalOverlay">
+  <div id="modalBox">
+    Modal Content Goes Here
+  </div>
+</div>
+
+<div class="main">
+
 <div id="header" class="header">
 <div id="banner" class="banner">
 </div>
@@ -107,6 +115,9 @@ Tags
 <div id="main" class="main">
 <br/>
 <div id="searchResults" class="searchResults">
+  <div>
+    <button onclick="clearSearch()">&#10006;</button>
+  </div>
 </div>
 <div id="pictureDetails" class="pictureDetails">
 </div>
@@ -132,14 +143,17 @@ Tags
 <div id="featured_pictures" class="featured_pictures">
 </div>
 </div>
-<div id="search" class="search">
-</div>
 </div>
 
 <div id="footer" class="footer">
 </div>
 
+</div>
 <script>
+
+function clearSearch() {
+  document.getElementById("searchResults").style.display = "none";
+}
 
 function decompressBlob(blob) {
 	let ds = new DecompressionStream("gzip");
@@ -300,6 +314,12 @@ document.querySelector(".prev").onclick = () => {
 	if (index < 0) index = items.length - 1;
 	update();
 };
+
+async function modalPicture(fileid) {
+    var db = await getDB();
+    var picture = db.exec("SELECT * from pictures where fileid='"+fileid+"'");
+    
+}
 
 function update() {
 	track.style.transform = `translateX(-${index * 100}%)`;

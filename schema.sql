@@ -6,6 +6,15 @@ create table pictures(
   collection text
 );
 
+CREATE VIRTUAL TABLE pictures_search USING fts5(
+  title,
+  author,
+  tags,
+  collection,
+  content='pictures',
+  content_fileid='fileid'
+);
+
 create table sizes(
   prodid text primary key,
   price integer,

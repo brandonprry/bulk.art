@@ -8,19 +8,24 @@ background-image:url("img1.jpg");
 
 body {
 font-family: "Gill Sans", sans-serif;
+padding: 0px;
+margin: 0px;
+border: none;
+}
+
+.main {  
   margin:0px;
   min-height: 1000px;
   width:600px;
   margin-left:auto;
   margin-right: auto;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
   padding:0px;
-  backdrop-filter:blur(7px);
 }
+
 .searchBox {
   text-align: center;
 }
+
 .searchButton {
   font-size:12px;
 }
@@ -119,6 +124,31 @@ font-family: "Gill Sans", sans-serif;
   background-color:#fff;
 }
 
+#modalOverlay {
+  position: fixed;
+  inset: 0;                 /* top:0 left:0 right:0 bottom:0 */
+
+  background: rgba(0,0,0,0.6);
+
+  display: none;            /* hidden by default */
+
+  justify-content: center;
+  align-items: center;
+
+  z-index: 10000;
+}
+
+#modalBox {
+  width: 700px;
+  height: 700px;
+
+  background: white;
+
+  overflow: auto;           /* scroll inside modal if needed */
+
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
 .collectionMenu {
   display: none;
   position:absolute;
@@ -185,6 +215,7 @@ font-family: "Gill Sans", sans-serif;
   text-align: center;
   background: #eee;
   border: 1px solid #ccc;
+  cursor:pointer;
 }
 
 .carousel-item img {
@@ -217,6 +248,7 @@ button {
 .featured_picture {
   display: inline-block;
   width: 230px;
+  cursor: pointer;
   height: 300px;
   margin-left: 27px;
   text-align: center;
