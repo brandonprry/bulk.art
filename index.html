@@ -199,6 +199,9 @@
         <div>
           <button onclick="clearSearch()">&#10006;</button>
         </div>
+        <div id="results">
+
+        </div>
       </div>
       <div id="pictureDetails" class="pictureDetails">
       </div>
@@ -464,8 +467,19 @@
     }
 
     async function search() {
+      var kw = document.getElementById("searchText").value;
       var db = await getDB();
-      var test = db.exec("SELECT DISTINCT collection from pictures");
+      var test = db.exec("SELECT * from pictures where name LIKE '%"+kw+"%' or tags LIKE '%"+kw+"%' or collection LIKE '%"+kw+"%'");
+
+      var element = document.getElementById("results");
+      element.innerHTML = "";
+      for (let i = 0; i < test[0].values.length; i++) {
+        var r = document.createElement("div");
+        r.className = "result";
+        r.innerHTML = "<div class='resultImage'><img src='"+test[0].values[i][1]+"' height=50px /></div><div class='resultName'>"+test[0].values[i][2]+"</div>";
+        element.appendChild(r);
+      }
+
       document.getElementById("searchResults").style.display = 'block';
     }
 
