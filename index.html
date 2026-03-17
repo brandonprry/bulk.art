@@ -55,6 +55,26 @@
       });
     }
 
+    function deleteFromIDB(key) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("artDB", 1); // use your DB name + version
+
+    request.onerror = () => reject(request.error);
+
+    request.onsuccess = () => {
+      const db = request.result;
+
+      const tx = db.transaction("files", "readwrite"); // your store name
+      const store = tx.objectStore("files");
+
+      const deleteReq = store.delete(key);
+
+      deleteReq.onsuccess = () => resolve(true);
+      deleteReq.onerror = () => reject(deleteReq.error);
+    };
+  });
+}
+
     function clearModal() {
       document.getElementById("modalOverlay").style.display = 'none';
       window.location.hash = "";
@@ -272,42 +292,50 @@
     }
 
     async function getDB() {
+  let db;
 
-      let db;
+  // 1. Get server last-modified via HEAD
+  const headResp = await fetch("/data.db.gz", { method: "HEAD" });
 
-      let cached = await getFromIDB("db");
+  const serverLastModified = headResp.headers.get("Last-Modified");
 
-      if (!cached) {
+  const localLastModified = localStorage.getItem("db_last_modified");
 
-        const response = await fetch("/data.db.gz");
-        const arrayBuffer = await response.arrayBuffer();
-        const byteArray = new Uint8Array(arrayBuffer);
+  // 2. If mismatch → invalidate cache
+  if (serverLastModified !== localLastModified) {
+    console.log("DB changed on server. Invalidating cache...");
 
-        var fin = await decompressBytes(byteArray);
+    await deleteFromIDB("db"); // you need this helper
+    localStorage.setItem("db_last_modified", serverLastModified);
+  }
 
-        await putInIDB("db", fin);
+  // 3. Try to load cached DB
+  let cached = await getFromIDB("db");
 
-        db = new window.SQL.Database(fin);
-        window.DB = db;
+  if (!cached) {
+    console.log("Fetching fresh DB...");
 
-      } else {
+    const response = await fetch("/data.db.gz");
+    const arrayBuffer = await response.arrayBuffer();
+    const byteArray = new Uint8Array(arrayBuffer);
 
-        if (window.DB == null) {
+    const fin = await decompressBytes(byteArray);
 
-          db = new window.SQL.Database(cached);
-          window.DB = db;
+    await putInIDB("db", fin);
 
-        } else {
-
-          db = window.DB;
-
-        }
-
-      }
-
-      return db;
-
+    db = new window.SQL.Database(fin);
+    window.DB = db;
+  } else {
+    if (window.DB == null) {
+      db = new window.SQL.Database(cached);
+      window.DB = db;
+    } else {
+      db = window.DB;
     }
+  }
+
+  return db;
+}
 
     function searchTag(element) {
       document.getElementById("searchText").value = element.innerText;
