@@ -57,14 +57,14 @@
 
     function deleteFromIDB(key) {
       return new Promise((resolve, reject) => {
-        const request = indexedDB.open("artDB", 1); // use your DB name + version
+        const request = indexedDB.open("artDB", 1); 
 
         request.onerror = () => reject(request.error);
 
         request.onsuccess = () => {
           const db = request.result;
 
-          const tx = db.transaction("files", "readwrite"); // your store name
+          const tx = db.transaction("files", "readwrite"); 
           const store = tx.objectStore("files");
 
           const deleteReq = store.delete(key);
@@ -83,25 +83,25 @@
     async function setModal(fileid) {
       var db = await getDB();
 
-          var modal = db.exec("select * from pictures where fileid = '" + fileid + "'");
-          var sizes = db.exec("select * from sizes where fileid = '" + fileid + "'");
+      var modal = db.exec("select * from pictures where fileid = '" + fileid + "'");
+      var sizes = db.exec("select * from sizes where fileid = '" + fileid + "'");
 
-          const select = document.getElementById("modalSizes");
-          select.innerHTML = "";
+      const select = document.getElementById("modalSizes");
+      select.innerHTML = "";
 
-          for (let k = 0; k < sizes[0].values.length; k++) {
-            const option = document.createElement("option");
-            option.textContent = sizes[0].values[k][2];
-            option.value = sizes[0].values[k][3];
-            select.appendChild(option);
-          }
+      for (let k = 0; k < sizes[0].values.length; k++) {
+        const option = document.createElement("option");
+        option.textContent = sizes[0].values[k][2];
+        option.value = sizes[0].values[k][3];
+        select.appendChild(option);
+      }
 
-          document.getElementById("modalTitle").innerText = modal[0].values[0][2];
-          document.getElementById("modalImage").innerHTML = "<img loading='lazy' src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
-          document.getElementById("modalTags").innerText = modal[0].values[0][3];
-          document.getElementById("modalCollection").innerText = modal[0].values[0][4];
-          document.getElementById("modalOverlay").style.display = 'flex';
-          window.location.hash = fileid;
+      document.getElementById("modalTitle").innerText = modal[0].values[0][2];
+      document.getElementById("modalImage").innerHTML = "<img loading='lazy' src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
+      document.getElementById("modalTags").innerText = modal[0].values[0][3];
+      document.getElementById("modalCollection").innerText = modal[0].values[0][4];
+      document.getElementById("modalOverlay").style.display = 'flex';
+      window.location.hash = fileid;
     }
 
     function loadContact() {
@@ -298,15 +298,14 @@
 
     function uint8ArrayToBase64(uint8Array) {
       let binaryString = '';
-      // Convert each byte to its character representation
       for (let i = 0; i < uint8Array.length; i++) {
         binaryString += String.fromCharCode(uint8Array[i]);
       }
-      return btoa(binaryString); // Encode binary string to Base64
+      return btoa(binaryString); 
     }
 
     function base64ToUint8Array(base64) {
-      const binaryString = atob(base64); // Decode Base64 to a binary string
+      const binaryString = atob(base64); 
       const length = binaryString.length;
       const bytes = new Uint8Array(length);
       for (let i = 0; i < length; i++) {
@@ -318,22 +317,19 @@
     async function getDB() {
       let db;
 
-      // 1. Get server last-modified via HEAD
       const headResp = await fetch("/data.db.gz", { method: "HEAD" });
 
       const serverLastModified = headResp.headers.get("Last-Modified");
 
       const localLastModified = localStorage.getItem("db_last_modified");
 
-      // 2. If mismatch → invalidate cache
       if (serverLastModified !== localLastModified) {
         console.log("DB changed on server. Invalidating cache...");
 
-        await deleteFromIDB("db"); // you need this helper
+        await deleteFromIDB("db");
         localStorage.setItem("db_last_modified", serverLastModified);
       }
 
-      // 3. Try to load cached DB
       let cached = await getFromIDB("db");
 
       if (!cached) {
@@ -382,7 +378,7 @@
 
       var db = await getDB();
 
-      var collectionsbulk = db.exec("SELECT DISTINCT collection from pictures");
+      var collectionsbulk = db.exec("SELECT DISTINCT collection from pictures order by collection");
       var tagsbulk = db.exec("select distinct tags from pictures");
       var homeBulk = db.exec("SELECT * from homepage");
 
@@ -404,8 +400,8 @@
         const item = document.createElement("div");
         item.className = "carousel-item";
         item.addEventListener("click", function () {
-          setModal(carouselBulk[0].values[i][0] );
-         
+          setModal(carouselBulk[0].values[i][0]);
+
         });
         item.innerHTML = "<br/><div class='collectionPicture'><div>" + author + "</div>"
           + "<img loading='lazy' src='" + carouselBulk[0].values[i][1] + "' height=300 />"
@@ -430,7 +426,7 @@
 
         item.addEventListener("click", function () {
           setModal(featuredImages[i]);
-         
+
         });
 
         item.className = "featured_picture";
@@ -467,7 +463,7 @@
 
   <script>
     const track = document.getElementById("carouselTrack");
-    const items = document.getElementsByClassName("carousel-item"); //document.querySelectorAll(".carousel-item");
+    const items = document.getElementsByClassName("carousel-item"); 
 
     let index = 0;
 
@@ -490,7 +486,7 @@
     async function search() {
       var kw = document.getElementById("searchText").value.replaceAll("'", "");
       var db = await getDB();
-      var test = db.exec("SELECT * from pictures where name LIKE '%" + kw.replace("'", "") + "%' or tags LIKE '%" + kw + "%' or collection LIKE '%" + kw + "%' order by name");
+      var test = db.exec("SELECT * from pictures where name LIKE '%" + kw + "%' or tags LIKE '%" + kw + "%' or collection LIKE '%" + kw + "%' order by name");
 
       var element = document.getElementById("results");
       element.innerHTML = "";
@@ -500,7 +496,7 @@
         r.innerHTML = "<div class='resultImage'><img loading='lazy' src='" + test[0].values[i][1] + "' height=50px /></div><div class='resultName'>" + test[0].values[i][2] + "</div>";
         r.addEventListener("click", () => {
           setModal(test[0].values[i][0]);
-         
+
         });
         element.appendChild(r);
       }
@@ -520,11 +516,13 @@
       if (hash.startsWith("#file_")) {
         const fileid = hash.replace("#", "");
         setModal(fileid);
-       
+
       } else if (hash.startsWith("#collection_")) {
       } else if (hash.startsWith("#tag_")) {
       } else if (hash.startsWith("#contact")) {
+        loadContact();
       } else if (hash.startsWith("#sitemap")) {
+        loadSitemap();
       }
     });
 
