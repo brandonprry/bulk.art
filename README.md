@@ -3,8 +3,8 @@
 Small example art gallery using sql.js and a SQLite database pushed into the browser.
 
 ```
-git clone https://github.com/brandonprry/bulk.art.git
-cd bulk.art
+git clone https://github.com/brandonprry/sql_js_art.git
+cd sql_js_art
 ```
 
 While I will use the python HTTP module here to start an HTTP server, there is ZERO reliance on python itself, we just need an HTTP server. You can use any HTTP server you want.
