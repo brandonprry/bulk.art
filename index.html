@@ -56,28 +56,52 @@
     }
 
     function deleteFromIDB(key) {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open("artDB", 1); // use your DB name + version
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open("artDB", 1); // use your DB name + version
 
-    request.onerror = () => reject(request.error);
+        request.onerror = () => reject(request.error);
 
-    request.onsuccess = () => {
-      const db = request.result;
+        request.onsuccess = () => {
+          const db = request.result;
 
-      const tx = db.transaction("files", "readwrite"); // your store name
-      const store = tx.objectStore("files");
+          const tx = db.transaction("files", "readwrite"); // your store name
+          const store = tx.objectStore("files");
 
-      const deleteReq = store.delete(key);
+          const deleteReq = store.delete(key);
 
-      deleteReq.onsuccess = () => resolve(true);
-      deleteReq.onerror = () => reject(deleteReq.error);
-    };
-  });
-}
+          deleteReq.onsuccess = () => resolve(true);
+          deleteReq.onerror = () => reject(deleteReq.error);
+        };
+      });
+    }
 
     function clearModal() {
       document.getElementById("modalOverlay").style.display = 'none';
       window.location.hash = "";
+    }
+
+    async function setModal(fileid) {
+      var db = await getDB();
+
+          var modal = db.exec("select * from pictures where fileid = '" + fileid + "'");
+          var sizes = db.exec("select * from sizes where fileid = '" + fileid + "'");
+
+          const select = document.getElementById("modalSizes");
+          select.innerHTML = "";
+
+          for (let k = 0; k < sizes[0].values.length; k++) {
+            const option = document.createElement("option");
+            option.textContent = sizes[0].values[k][2];
+            option.value = sizes[0].values[k][3];
+            select.appendChild(option);
+          }
+
+          document.getElementById("modalTitle").innerText = modal[0].values[0][2];
+          document.getElementById("modalImage").innerHTML = "<img loading='lazy' src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
+          document.getElementById("modalTags").innerText = modal[0].values[0][3];
+          document.getElementById("modalCollection").innerText = modal[0].values[0][4];
+          document.getElementById("modalOverlay").style.display = 'flex';
+          window.location.hash = fileid;
     }
 
     function loadContact() {
@@ -292,50 +316,50 @@
     }
 
     async function getDB() {
-  let db;
+      let db;
 
-  // 1. Get server last-modified via HEAD
-  const headResp = await fetch("/data.db.gz", { method: "HEAD" });
+      // 1. Get server last-modified via HEAD
+      const headResp = await fetch("/data.db.gz", { method: "HEAD" });
 
-  const serverLastModified = headResp.headers.get("Last-Modified");
+      const serverLastModified = headResp.headers.get("Last-Modified");
 
-  const localLastModified = localStorage.getItem("db_last_modified");
+      const localLastModified = localStorage.getItem("db_last_modified");
 
-  // 2. If mismatch → invalidate cache
-  if (serverLastModified !== localLastModified) {
-    console.log("DB changed on server. Invalidating cache...");
+      // 2. If mismatch → invalidate cache
+      if (serverLastModified !== localLastModified) {
+        console.log("DB changed on server. Invalidating cache...");
 
-    await deleteFromIDB("db"); // you need this helper
-    localStorage.setItem("db_last_modified", serverLastModified);
-  }
+        await deleteFromIDB("db"); // you need this helper
+        localStorage.setItem("db_last_modified", serverLastModified);
+      }
 
-  // 3. Try to load cached DB
-  let cached = await getFromIDB("db");
+      // 3. Try to load cached DB
+      let cached = await getFromIDB("db");
 
-  if (!cached) {
-    console.log("Fetching fresh DB...");
+      if (!cached) {
+        console.log("Fetching fresh DB...");
 
-    const response = await fetch("/data.db.gz");
-    const arrayBuffer = await response.arrayBuffer();
-    const byteArray = new Uint8Array(arrayBuffer);
+        const response = await fetch("/data.db.gz");
+        const arrayBuffer = await response.arrayBuffer();
+        const byteArray = new Uint8Array(arrayBuffer);
 
-    const fin = await decompressBytes(byteArray);
+        const fin = await decompressBytes(byteArray);
 
-    await putInIDB("db", fin);
+        await putInIDB("db", fin);
 
-    db = new window.SQL.Database(fin);
-    window.DB = db;
-  } else {
-    if (window.DB == null) {
-      db = new window.SQL.Database(cached);
-      window.DB = db;
-    } else {
-      db = window.DB;
+        db = new window.SQL.Database(fin);
+        window.DB = db;
+      } else {
+        if (window.DB == null) {
+          db = new window.SQL.Database(cached);
+          window.DB = db;
+        } else {
+          db = window.DB;
+        }
+      }
+
+      return db;
     }
-  }
-
-  return db;
-}
 
     function searchTag(element) {
       document.getElementById("searchText").value = element.innerText;
@@ -350,7 +374,6 @@
     }
 
     async function loadPage() {
-
       [SQL] = await Promise.all([initSqlJs({
         locateFile: f => "/" + f
       })]);
@@ -381,25 +404,8 @@
         const item = document.createElement("div");
         item.className = "carousel-item";
         item.addEventListener("click", function () {
-          var modal = db.exec("select * from pictures where fileid = '" + carouselBulk[0].values[i][0] + "'");
-          var sizes = db.exec("select * from sizes where fileid = '" + carouselBulk[0].values[i][0] + "'");
-
-          const select = document.getElementById("modalSizes");
-          select.innerHTML = "";
-
-          for (let k = 0; k < sizes[0].values.length; k++) {
-            const option = document.createElement("option");
-            option.textContent = sizes[0].values[k][2];
-            option.value = sizes[0].values[k][3];
-            select.appendChild(option);
-          }
-
-          document.getElementById("modalTitle").innerText = modal[0].values[0][2];
-          document.getElementById("modalImage").innerHTML = "<img loading='lazy' src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
-          document.getElementById("modalTags").innerText = modal[0].values[0][3];
-          document.getElementById("modalCollection").innerText = modal[0].values[0][4];
-          document.getElementById("modalOverlay").style.display = 'flex';
-          window.location.hash = carouselBulk[0].values[i][0];
+          setModal(carouselBulk[0].values[i][0] );
+         
         });
         item.innerHTML = "<br/><div class='collectionPicture'><div>" + author + "</div>"
           + "<img loading='lazy' src='" + carouselBulk[0].values[i][1] + "' height=300 />"
@@ -423,26 +429,8 @@
         const item = document.createElement("div");
 
         item.addEventListener("click", function () {
-
-          var modal = db.exec("select * from pictures where fileid = '" + featuredImages[i] + "'");
-          var sizes = db.exec("select * from sizes where fileid = '" + featuredImages[i] + "'");
-
-          const select = document.getElementById("modalSizes");
-          select.innerHTML = "";
-
-          for (let k = 0; k < sizes[0].values.length; k++) {
-            const option = document.createElement("option");
-            option.textContent = sizes[0].values[k][2];
-            option.value = sizes[0].values[k][3];
-            select.appendChild(option);
-          }
-
-          document.getElementById("modalTitle").innerText = modal[0].values[0][2];
-          document.getElementById("modalImage").innerHTML = "<img loading='lazy' src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
-          document.getElementById("modalTags").innerText = modal[0].values[0][3];
-          document.getElementById("modalCollection").innerText = modal[0].values[0][4];
-          document.getElementById("modalOverlay").style.display = 'flex';
-          window.location.hash = featuredImages[i];
+          setModal(featuredImages[i]);
+         
         });
 
         item.className = "featured_picture";
@@ -495,15 +483,14 @@
       update();
     };
 
-
     function update() {
       track.style.transform = `translateX(-${index * 100}%)`;
     }
 
     async function search() {
-      var kw = document.getElementById("searchText").value.replaceAll("'","");
+      var kw = document.getElementById("searchText").value.replaceAll("'", "");
       var db = await getDB();
-      var test = db.exec("SELECT * from pictures where name LIKE '%" + kw.replace("'","") + "%' or tags LIKE '%" + kw + "%' or collection LIKE '%" + kw + "%' order by name");
+      var test = db.exec("SELECT * from pictures where name LIKE '%" + kw.replace("'", "") + "%' or tags LIKE '%" + kw + "%' or collection LIKE '%" + kw + "%' order by name");
 
       var element = document.getElementById("results");
       element.innerHTML = "";
@@ -512,26 +499,8 @@
         r.className = "result";
         r.innerHTML = "<div class='resultImage'><img loading='lazy' src='" + test[0].values[i][1] + "' height=50px /></div><div class='resultName'>" + test[0].values[i][2] + "</div>";
         r.addEventListener("click", () => {
-          const fileid = test[0].values[i][0];
-          var modal = db.exec("SELECT * from pictures where fileid='" + fileid + "'");
-          var sizes = db.exec("select * from sizes where fileid = '" + fileid + "'");
-
-          const select = document.getElementById("modalSizes");
-          select.innerHTML = "";
-
-          for (let k = 0; k < sizes[0].values.length; k++) {
-            const option = document.createElement("option");
-            option.textContent = sizes[0].values[k][2];
-            option.value = sizes[0].values[k][3];
-            select.appendChild(option);
-          }
-
-          document.getElementById("modalTitle").innerText = modal[0].values[0][2];
-          document.getElementById("modalImage").innerHTML = "<img loading='lazy' src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
-          document.getElementById("modalTags").innerText = modal[0].values[0][3];
-          document.getElementById("modalCollection").innerText = modal[0].values[0][4];
-          document.getElementById("modalOverlay").style.display = 'flex';
-          window.location.hash = fileid;
+          setModal(test[0].values[i][0]);
+         
         });
         element.appendChild(r);
       }
@@ -550,25 +519,8 @@
 
       if (hash.startsWith("#file_")) {
         const fileid = hash.replace("#", "");
-        var modal = db.exec("SELECT * from pictures where fileid='" + fileid + "'");
-        var sizes = db.exec("select * from sizes where fileid = '" + fileid + "'");
-
-        const select = document.getElementById("modalSizes");
-        select.innerHTML = "";
-
-        for (let k = 0; k < sizes[0].values.length; k++) {
-          const option = document.createElement("option");
-          option.textContent = sizes[0].values[k][2];
-          option.value = sizes[0].values[k][3];
-          select.appendChild(option);
-        }
-
-        document.getElementById("modalTitle").innerText = modal[0].values[0][2];
-        document.getElementById("modalImage").innerHTML = "<img loading='lazy' src='" + modal[0].values[0][1] + "' style='min-width:400px; min-height:400px;' />";
-        document.getElementById("modalTags").innerText = modal[0].values[0][3];
-        document.getElementById("modalCollection").innerText = modal[0].values[0][4];
-        document.getElementById("modalOverlay").style.display = 'flex';
-        window.location.hash = fileid;
+        setModal(fileid);
+       
       } else if (hash.startsWith("#collection_")) {
       } else if (hash.startsWith("#tag_")) {
       } else if (hash.startsWith("#contact")) {
