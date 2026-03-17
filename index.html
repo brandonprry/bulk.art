@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <link rel="preload" href="sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
   <meta charset="UTF-8">
-  <title>Bulk Fine Art</title>
+  <title>Austin Fine Art</title>
   <script src='/sql-wasm.js'></script>
   <script>
 
@@ -149,6 +148,15 @@
       </div>
       <center>
         <br />
+        <p>
+          Based in Austin, Texas, all prints are printed locally and shipped straight to you.
+        </p>
+        <p>
+          All prints are as high resolution as possible.
+        </p>
+        <p>
+          For any questions, comments, or concerns: bperry@atx.services
+        </p>
       </center>
     </div>
   </div>
@@ -421,8 +429,8 @@
       }
 
       var collections = [];
-      for (let i = 0; i < collectionsbulk.length; i++) {
-        collections.push(collectionsbulk[i].values[0][0]);
+      for (let i = 0; i < collectionsbulk[0].values.length; i++) {
+        collections.push(collectionsbulk[0].values[i][0]);
       }
 
       var div = document.getElementById("collectionMenu");
@@ -431,8 +439,8 @@
       }
 
       var tags = [];
-      for (let i = 0; i < tagsbulk.length; i++) {
-        tags = tags.concat(tagsbulk[i].values[0][0].split(","));
+      for (let i = 0; i < tagsbulk[0].values.length; i++) {
+        tags = tags.concat(tagsbulk[0].values[i][0].split(","));
       }
 
       tags = tags.sort().filter(function (item, pos) { return tags.indexOf(item) == pos });
