@@ -37,7 +37,6 @@ body {
 
 .resultImage img {
   max-width: 50px;
-
   vertical-align: middle;
 }
 
@@ -249,14 +248,11 @@ body {
 #sitemapBox {
   min-width: 400px;
   min-height: 400px;
-
-  padding: 10px;
-
+  max-height: 800px;
+  padding: 0px;
   background: white;
-
   overflow: auto;
   /* scroll inside modal if needed */
-
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
