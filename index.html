@@ -473,7 +473,7 @@
     }
 
     async function search() {
-      var kw = document.getElementById("searchText").value.replace("'","");
+      var kw = document.getElementById("searchText").value.replaceAll("'","");
       var db = await getDB();
       var test = db.exec("SELECT * from pictures where name LIKE '%" + kw.replace("'","") + "%' or tags LIKE '%" + kw + "%' or collection LIKE '%" + kw + "%' order by name");
 
