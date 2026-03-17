@@ -7,10 +7,8 @@
   <title>Austin Fine Art</title>
   <script src='/sql-wasm.js'></script>
   <script>
-
     function openDB() {
       return new Promise((resolve, reject) => {
-
         const request = indexedDB.open("artDB", 1);
 
         request.onupgradeneeded = function (event) {
@@ -25,7 +23,6 @@
         request.onerror = function (event) {
           reject(event.target.error);
         };
-
       });
     }
 
@@ -151,7 +148,6 @@
       var url = select.options[select.selectedIndex].value;
       window.open(url, "_blank");
     }
-
   </script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -284,7 +280,6 @@
 
   </div>
   <script>
-
     function clearSearch() {
       document.getElementById("searchResults").style.display = "none";
     }
@@ -426,7 +421,6 @@
 
         item.addEventListener("click", function () {
           setModal(featuredImages[i]);
-
         });
 
         item.className = "featured_picture";
@@ -516,7 +510,6 @@
       if (hash.startsWith("#file_")) {
         const fileid = hash.replace("#", "");
         setModal(fileid);
-
       } else if (hash.startsWith("#collection_")) {
       } else if (hash.startsWith("#tag_")) {
       } else if (hash.startsWith("#contact")) {
@@ -525,7 +518,6 @@
         loadSitemap();
       }
     });
-
   </script>
 </body>
 
