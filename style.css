@@ -3,14 +3,14 @@ html {
   width: 100%;
   margin: 0px;
   padding: 0px;
-background-image:url("img1.jpg");  
+  background-image: url("img1.jpg");
 }
 
 body {
-font-family: "Gill Sans", sans-serif;
-padding: 0px;
-margin: 0px;
-border: none;
+  font-family: "Gill Sans", sans-serif;
+  padding: 0px;
+  margin: 0px;
+  border: none;
 }
 
 .result {
@@ -47,13 +47,13 @@ border: none;
   vertical-align: top;
 }
 
-.main {  
-  margin:0px;
+.main {
+  margin: 0px;
   min-height: 1000px;
-  width:600px;
-  margin-left:auto;
+  width: 600px;
+  margin-left: auto;
   margin-right: auto;
-  padding:0px;
+  padding: 0px;
 }
 
 .searchBox {
@@ -61,96 +61,111 @@ border: none;
 }
 
 .searchButton {
-  font-size:12px;
+  font-size: 12px;
 }
 
 .banner {
   height: 100px;
   width: 100%;
-  
+
 }
 
 /* slideshow container */
-.slideshow{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index:-1;
-  list-style:none;
-  padding:0;
-  margin:0;
+.slideshow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* each slide */
-.slideshow li{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background-size:cover;
-  background-position:center;
-  opacity:0;
-  filter:blur(7px);
-  animation:fade 90s infinite;
+.slideshow li {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  filter: blur(7px);
+  animation: fade 90s infinite;
 }
 
 /* individual images + staggered timing */
-.slideshow li:nth-child(1){
-  background-image:url("img1.jpg");
-  animation-delay:0s;
+.slideshow li:nth-child(1) {
+  background-image: url("img1.jpg");
+  animation-delay: 0s;
 }
 
-.slideshow li:nth-child(2){
-  background-image:url("img2.jpg");
-  animation-delay:15s;
+.slideshow li:nth-child(2) {
+  background-image: url("img2.jpg");
+  animation-delay: 15s;
 }
 
-.slideshow li:nth-child(3){
-  background-image:url("img3.jpg");
-  animation-delay:40s;
+.slideshow li:nth-child(3) {
+  background-image: url("img3.jpg");
+  animation-delay: 40s;
 }
 
-.slideshow li:nth-child(4){
-  background-image:url("img4.jpg");
-  animation-delay:65s;
+.slideshow li:nth-child(4) {
+  background-image: url("img4.jpg");
+  animation-delay: 65s;
 }
 
-.slideshow li:nth-child(5){
-  background-image:url("img5.jpg");
-  animation-delay:90s;
+.slideshow li:nth-child(5) {
+  background-image: url("img5.jpg");
+  animation-delay: 90s;
 }
 
 /* fade timing */
-@keyframes fade{
-  0%   {opacity:0;}
-  8%   {opacity:1;}
-  20%  {opacity:1;}
-  97% {opacity:1;}
-  100% {opacity:0;}
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  97% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 .banner {
   background-image: url(banner.png);
 }
+
 .header {
-  background-color:#fff;
+  background-color: #fff;
 }
 
 .footer {
-  background-color:#fff;
+  background-color: #fff;
 }
 
 .search {
   width: 100%;
-  margin:0px;
+  margin: 0px;
   padding: 0px;
   height: 50px;
   vertical-align: bottom;
 }
 
 .main {
-  background-color:#fff;
+  background-color: #fff;
 }
 
 .collections {
@@ -158,24 +173,24 @@ border: none;
   width: 49%;
   height: 30px;
   text-align: center;
-  background-color:#fff;
+  background-color: #fff;
 }
 
 .modalImage img {
- border: 1px solid #000;
-    box-shadow: 10px 5px 5px #ccc; 
-    max-width: 90%; /* Ensures the image doesn't exceed its container's width */
-  height: auto; 
+  border: 1px solid #000;
+  box-shadow: 10px 5px 5px #ccc;
+  max-width: 90%;
+  /* Ensures the image doesn't exceed its container's width */
+  height: auto;
 }
 
 #modalOverlay {
   position: fixed;
-  inset: 0;                 /* top:0 left:0 right:0 bottom:0 */
-
-  background: rgba(0,0,0,0.6);
-
-  display: none;            /* hidden by default */
-
+  inset: 0;
+  /* top:0 left:0 right:0 bottom:0 */
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  /* hidden by default */
   justify-content: center;
   align-items: center;
   backdrop-filter: blur(5px);
@@ -186,24 +201,20 @@ border: none;
 #modalBox {
   width: 580px;
   min-height: 400px;
-
   padding: 10px;
-
   background: white;
-
-  overflow: auto;           /* scroll inside modal if needed */
-
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  overflow: auto;
+  /* scroll inside modal if needed */
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
 #contactOverlay {
   position: fixed;
-  inset: 0;                 /* top:0 left:0 right:0 bottom:0 */
-
-  background: rgba(0,0,0,0.6);
-
-  display: none;            /* hidden by default */
-
+  inset: 0;
+  /* top:0 left:0 right:0 bottom:0 */
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  /* hidden by default */
   justify-content: center;
   align-items: center;
   backdrop-filter: blur(5px);
@@ -214,24 +225,20 @@ border: none;
 #contactBox {
   min-width: 400px;
   min-height: 400px;
-
   padding: 10px;
-
   background: white;
-
-  overflow: auto;           /* scroll inside modal if needed */
-
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  overflow: auto;
+  /* scroll inside modal if needed */
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
 #sitemapOverlay {
   position: fixed;
-  inset: 0;                 /* top:0 left:0 right:0 bottom:0 */
-
-  background: rgba(0,0,0,0.6);
-
-  display: none;            /* hidden by default */
-
+  inset: 0;
+  /* top:0 left:0 right:0 bottom:0 */
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  /* hidden by default */
   justify-content: center;
   align-items: center;
   backdrop-filter: blur(5px);
@@ -247,9 +254,10 @@ border: none;
 
   background: white;
 
-  overflow: auto;           /* scroll inside modal if needed */
+  overflow: auto;
+  /* scroll inside modal if needed */
 
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
 .footerLink {
@@ -258,7 +266,7 @@ border: none;
 
 .collectionMenu {
   display: none;
-  position:absolute;
+  position: absolute;
   background: white;
   border: 1px solid #ccc;
   padding: 5px;
@@ -273,21 +281,21 @@ border: none;
 }
 
 .collection:hover {
-  background-color:#e5e5e5;
+  background-color: #e5e5e5;
   text-decoration: underline;
 }
 
 .tags {
-  display:inline-block;
-  width:49%;
-  height:30px;
+  display: inline-block;
+  width: 49%;
+  height: 30px;
   text-align: center;
   background-color: #fff;
 }
 
 .tagMenu {
   display: none;
-  position:absolute;
+  position: absolute;
   background: white;
   border: 1px solid #ccc;
   padding: 5px;
@@ -302,7 +310,7 @@ border: none;
 }
 
 .tag:hover {
-  background-color:#e5e5e5;
+  background-color: #e5e5e5;
   text-decoration: underline;
 }
 
@@ -325,7 +333,7 @@ border: none;
 
 .collectionPicture {
   border: 1px solid #eee;
-  width:300px;
+  width: 300px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -337,21 +345,21 @@ border: none;
   text-align: center;
   background: #eee;
   border: 1px solid #ccc;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .carousel-item img {
-  max-height:200px;
-  max-width:300px;
-  height:auto;
-  width:auto;
+  max-height: 200px;
+  max-width: 300px;
+  height: auto;
+  width: auto;
   box-shadow: 10px 5px 5px #CCC;
   border: 1px solid #000;
 }
 
 .featuredTitle {
   text-align: center;
-  width:100%;
+  width: 100%;
 }
 
 button {
@@ -375,28 +383,28 @@ button {
   margin-left: 27px;
   text-align: center;
   vertical-align: top;
-  border:1px solid #fff;
+  border: 1px solid #fff;
 }
 
 .featured_picture:hover {
-  border:1px solid #b5b5b5;
+  border: 1px solid #b5b5b5;
 }
 
 .featured_picture img {
-    max-height:200px;
-    max-width:200px;
-    height:auto;
-    width:auto;
-    border: 1px solid #000;
-    box-shadow: 10px 5px 5px #ccc;
+  max-height: 200px;
+  max-width: 200px;
+  height: auto;
+  width: auto;
+  border: 1px solid #000;
+  box-shadow: 10px 5px 5px #ccc;
 }
 
 .searchResults {
   display: none;
-  position:absolute;
+  position: absolute;
   background: white;
   border: 1px solid #ccc;
-  border-radius:3px;
+  border-radius: 3px;
   padding: 0px;
   width: 490px;
   min-height: 200px;
@@ -410,7 +418,7 @@ button {
 
 .pictureDetails {
   display: none;
-  position:absolute;
+  position: absolute;
   background: white;
   border: 1px solid #ccc;
   padding: 5px;
@@ -419,4 +427,3 @@ button {
   z-index: 10;
   backdrop-filter: blur(5px);
 }
-
