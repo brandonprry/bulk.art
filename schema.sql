@@ -16,6 +16,8 @@ create table sizes(
 
 create table homepage (
   featured_collection text,
-  featured_pictures text
+  featured_pictures text,
+  month integer
 );
+
 

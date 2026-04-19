@@ -113,7 +113,7 @@
 
     async function loadSitemap() {
       var db = await getDB();
-      var pics = db.exec("select * from pictures order by name");
+      var pics = db.exec("select fileid, url, name , tags, collection from pictures order by name");
 
       if (!window.SITEMAP) {
         for (let i = 0; i < pics[0].values.length; i++) {
@@ -318,7 +318,7 @@
 
       const localLastModified = localStorage.getItem("db_last_modified");
 
-      if (serverLastModified !== localLastModified) {
+      if (localLastModified !== null && serverLastModified !== localLastModified) {
         console.log("DB changed on server. Invalidating cache...");
 
         await deleteFromIDB("db");
@@ -334,7 +334,14 @@
         const arrayBuffer = await response.arrayBuffer();
         const byteArray = new Uint8Array(arrayBuffer);
 
-        const fin = await decompressBytes(byteArray);
+        var fin;
+        try {
+          fin = await decompressBytes(byteArray);
+        } catch {
+           const response = await fetch("/data.db");
+           const arrayBuffer = await response.arrayBuffer();
+           fin = new Uint8Array(arrayBuffer);
+        }
 
         await putInIDB("db", fin);
 
@@ -376,6 +383,8 @@
       var collectionsbulk = db.exec("SELECT DISTINCT collection from pictures order by collection");
       var tagsbulk = db.exec("select distinct tags from pictures");
       var homeBulk = db.exec("SELECT * from homepage");
+
+      //var homeBulk = db.exec("SELECT * from homepage where month = " + new Date().getMonth());
 
       var featuredCollection = homeBulk[0].values[0][0];
       var featuredImages = homeBulk[0].values[0][1].split(",");
@@ -443,7 +452,7 @@
 
       var tags = [];
       for (let i = 0; i < tagsbulk[0].values.length; i++) {
-        tags = tags.concat(tagsbulk[0].values[i][0].split(","));
+        tags = tags.concat(tagsbulk[0].values[i][0].split(",").map(s => s.trim()));
       }
 
       tags = tags.sort().filter(function (item, pos) { return tags.indexOf(item) == pos });
@@ -480,7 +489,7 @@
     async function search() {
       var kw = document.getElementById("searchText").value.replaceAll("'", "");
       var db = await getDB();
-      var test = db.exec("SELECT * from pictures where name LIKE '%" + kw + "%' or tags LIKE '%" + kw + "%' or collection LIKE '%" + kw + "%' order by name");
+      var test = db.exec("SELECT fileid, url, name, tags, collection from pictures where name LIKE '%" + kw + "%' or tags LIKE '%" + kw + "%' or collection LIKE '%" + kw + "%' order by name");
 
       var element = document.getElementById("results");
       element.innerHTML = "";

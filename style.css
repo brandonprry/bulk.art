@@ -194,6 +194,8 @@ body {
   padding: 5px;
   width: 290px;
   z-index: 10;
+  height: 600px;
+  overflow: auto;
 }
 
 .collection {
@@ -223,6 +225,8 @@ body {
   padding: 5px;
   width: 290px;
   z-index: 10;
+  height: 600px;
+  overflow: auto;
 }
 
 .tag {
