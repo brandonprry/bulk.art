@@ -382,9 +382,9 @@
 
       var collectionsbulk = db.exec("SELECT DISTINCT collection from pictures order by collection");
       var tagsbulk = db.exec("select distinct tags from pictures");
-      var homeBulk = db.exec("SELECT * from homepage");
+      //var homeBulk = db.exec("SELECT * from homepage");
 
-      //var homeBulk = db.exec("SELECT * from homepage where month = " + new Date().getMonth());
+      var homeBulk = db.exec("SELECT * from homepage where month = " + new Date().getMonth());
 
       var featuredCollection = homeBulk[0].values[0][0];
       var featuredImages = homeBulk[0].values[0][1].split(",");
